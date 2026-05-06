@@ -1,5 +1,9 @@
 defmodule Inventario do
 
+  def inicializar() do
+    GestionArchivos.leer()
+  end
+
   def agregar_producto(productos, codigo, nombre, precio, cantidad) do
     case Producto.nuevo(nombre,precio,cantidad) do
       {:ok, nuevo_producto} ->
@@ -9,7 +13,9 @@ defmodule Inventario do
           String.length(codigo)>5 ->
             {:error, :codigo_invalido}
           true ->
-            {:ok, Map.put(productos,codigo,nuevo_producto)}
+            nuevo = Map.put(productos,codigo,nuevo_producto)
+            GestionArchivos.escribir(nuevo)
+            {:ok, nuevo}
         end
       {:error, razon} ->
         {:error, razon}
@@ -18,7 +24,9 @@ defmodule Inventario do
 
   def eliminar_producto(productos, codigo) do
     if Map.has_key?(productos, codigo) do
-      {:ok, Map.delete(productos, codigo)}
+      nuevo=Map.delete(productos, codigo)
+      GestionArchivos.escribir(nuevo)
+      {:ok, nuevo}
     else
       {:error, :no_encontrado}
     end
@@ -37,7 +45,9 @@ defmodule Inventario do
         {:error, :no_encontrado}
       producto ->
         actualizado = %{producto | nombre: nombre, precio: precio, cantidad: cantidad}
-        {:ok, Map.put(productos,codigo,actualizado)}
+        nuevo=Map.put(productos,codigo,actualizado)
+        GestionArchivos.escribir(nuevo)
+        {:ok, nuevo}
     end
   end
 

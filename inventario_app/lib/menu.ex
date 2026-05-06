@@ -1,6 +1,6 @@
 defmodule Menu do
   def main do
-    {:ok, productos} = {:ok, %{}}
+    {:ok, productos} = {:ok, Inventario.inicializar()}
 
     mensaje=
     """

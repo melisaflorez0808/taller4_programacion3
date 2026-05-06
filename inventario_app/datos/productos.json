@@ -1,0 +1,12 @@
+{
+  "0001": {
+    "cantidad": 10,
+    "nombre": "maiz",
+    "precio": 1.0e4
+  },
+  "0003": {
+    "cantidad": 30,
+    "nombre": "salchicha",
+    "precio": 2.0e5
+  }
+}
