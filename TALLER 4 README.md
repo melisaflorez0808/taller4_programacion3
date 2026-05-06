@@ -1,7 +1,11 @@
 # **EJECUCIÓN TALLER: STRUCTS, MAPAS Y MANEJO DE ARCHIVOS EN ELIXIR**
-Integrantes:
-Juan Sebastian Restrepo Vega
-Laura Melisa Florez Gomez
+**Integrantes:**
+<p>
+  Juan Sebastian Restrepo Vega
+  
+  Laura Melisa Florez Gomez
+</p>
+
 
 <p>
   Durante la ejecución del código se da aplicabilidad a los siguientes conceptos
