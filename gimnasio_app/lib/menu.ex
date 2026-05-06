@@ -1,6 +1,6 @@
 defmodule Menu do
   def main do
-    {:ok, socios} = {:ok, %{}}
+    {:ok, socios} = {:ok,Gimnasio.inicializar()}
 
     mensaje=
     """
@@ -36,9 +36,6 @@ defmodule Menu do
         Util.leer("Ingrese la edad del socio a crear: ",:integer))
 
         case agregar do
-          {:error, :cedula_duplicada} ->
-            IO.puts("No se puede agregar: cédula duplicada")
-            validar_menu_inicial(mensaje,socios)
           {:error, razon} ->
             IO.puts("No se puede agregar: #{razon}")
             validar_menu_inicial(mensaje,socios)

@@ -7,17 +7,17 @@ defmodule Producto do
       not Regex.match?(~r/^[a-zA-Z]+$/, nombre)->
         {:error, :nombre_invalido}
 
-      not precio >=0 ->
+      precio < 0 ->
         {:error, :precio_invalido}
 
-      not cantidad < 0 ->
+      cantidad < 0 ->
         {:error, :cantidad_invalida}
 
       not is_integer(cantidad) ->
         {:error, :cantidad_debe_ser_entera}
 
       true ->
-        {:ok, %_MODULE_{nombre: nombre, precio: precio, cantidad: cantidad}}
+        {:ok, %__MODULE__{nombre: nombre, precio: precio, cantidad: cantidad}}
     end
   end
 end

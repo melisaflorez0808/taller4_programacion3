@@ -6,7 +6,7 @@ defmodule Inventario do
         cond do
           Map.has_key?(productos, codigo) ->
             {:error, :codigo_repetido}
-          String.length(codigo)<=5 ->
+          String.length(codigo)>5 ->
             {:error, :codigo_invalido}
           true ->
             {:ok, Map.put(productos,codigo,nuevo_producto)}
@@ -47,17 +47,55 @@ defmodule Inventario do
     Enum.each(productos, fn{codigo, producto} -> IO.puts("Codigo: #{codigo} Nombre: #{producto.nombre}, Precio #{producto.precio}, Cantidad #{producto.cantidad}") end)
   end
 
+  def productos_mas_2_vocales(productos) do
+    Enum.filter(productos, fn {_codigo,producto} -> contar_vocales(producto.nombre)>=2 end)
+      |>Enum.map(fn {codigo,producto}->{codigo,producto.nombre} end)
+  end
+
+  defp contar_vocales(""), do: 0
+  defp contar_vocales(cadena) do
+    primer_caracter=String.first(cadena)
+    resto=String.slice(cadena,1..-1//1)
+
+    if es_vocal?(primer_caracter) do
+      1+contar_vocales(resto)
+    else
+      contar_vocales(resto)
+    end
+  end
+  defp es_vocal?(letra), do: letra in ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"]
+
+  def letra_inicio_fin_igual(productos) do
+    Enum.filter(productos, fn {_codigo, producto} ->
+      nombre = String.downcase(producto.nombre)
+      String.first(nombre) == String.last(nombre) end)
+      |>listar_productos()
+  end
+
+  def productos_valor_por_debajo(productos,referencia) do
+    Enum.filter(productos, fn {_codigo, producto} -> producto.precio < referencia end)
+      |>listar_productos()
+  end
+
+  def productos_mas_caros(productos) do
+    Enum.sort_by(productos, fn {_codigo,producto} -> producto.precio  end,:desc)
+      |>Enum.take(3)
+      |>listar_productos()
+  end
+
+  def productos_rango(productos,min,max) do
+    Enum.filter(productos, fn {_codigo,producto}-> producto.precio>=min and producto.precio <= max end)
+      |>Enum.map(fn {_codigo,producto}-> "#{producto.nombre} - #{producto.precio}" end)
+      |>Enum.join("\n")
+  end
+
+  def productos_rango_precios(productos) do
+    Enum.group_by(productos, fn {_codigo,producto} ->
+      cond do
+      producto.precio < 50000 -> :menor_a_50000
+      producto.precio <= 100.000 -> :entre_50000_y_100000
+      true -> :mayor_a_100000
+      end
+    end)
+  end
 end
-
-"""
-Productos cuyo nombre contenga al menos dos vocales. Retornar una lista de tuplas: [{codigo, nombre}]
-Productos cuyo nombre comience y termine con la misma letra
-Productos con precio por debajo de un valor dado
-Los tres productos más caros del inventario
-Productos con precio entre dos valores Retornar una cadena: "Producto1 - 50000, Producto2 - 70000"
-Agrupar productos por rango de precio:
-Menores a 50000
-Entre 50000 y 100000
-Mayores a 100000
-
-"""

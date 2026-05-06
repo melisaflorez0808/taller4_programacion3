@@ -1,12 +1,18 @@
 defmodule Gimnasio do
-  
+
+  def inicializar() do
+    GestionArchivos.leer()
+  end
+
   def agregar_socio(socios, cedula, nombre, edad) do
     case Socio.nuevo(nombre, edad) do
       {:ok, nuevo_socio} ->
         if Map.has_key?(socios, cedula) do
           {:error, :cedula_duplicada}
         else
-          {:ok, Map.put(socios, cedula, nuevo_socio)}
+          nuevo = Map.put(socios, cedula, nuevo_socio)
+          GestionArchivos.escribir(nuevo)
+          {:ok, nuevo}
         end
       {:error, razon} ->
         {:error, razon}
@@ -15,7 +21,9 @@ defmodule Gimnasio do
 
   def eliminar_socio(socios, cedula) do
     if Map.has_key?(socios, cedula) do
-      {:ok, Map.delete(socios, cedula)}
+      nuevo = Map.delete(socios, cedula)
+      GestionArchivos.escribir(nuevo)
+      {:ok,nuevo}
     else
       {:error, :no_encontrado}
     end
@@ -34,7 +42,9 @@ defmodule Gimnasio do
         {:error, :no_encontrado}
       socio ->
         actualizado = %{socio | nombre: nombre, edad: edad}
-        {:ok, Map.put(socios, cedula, actualizado)}
+        nuevo = Map.put(socios, cedula, actualizado)
+        GestionArchivos.escribir(nuevo)
+        {:ok, nuevo}
     end
   end
 
@@ -45,7 +55,9 @@ defmodule Gimnasio do
       socio ->
         case Socio.inscribir_clase(socio, clase) do
           {:ok, actualizado} ->
-            {:ok, Map.put(socios, cedula, actualizado)}
+            nuevo = Map.put(socios, cedula, actualizado)
+            GestionArchivos.escribir(nuevo)
+            {:ok, nuevo}
           {:error, razon} ->
             {:error, razon}
         end
@@ -59,7 +71,9 @@ defmodule Gimnasio do
       socio ->
         case Socio.desinscribir_clase(socio, clase) do
           {:ok, actualizado} ->
-            {:ok, Map.put(socios, cedula, actualizado)}
+            nuevo = Map.put(socios, cedula, actualizado)
+            GestionArchivos.escribir(nuevo)
+            {:ok, nuevo}
         end
     end
   end
